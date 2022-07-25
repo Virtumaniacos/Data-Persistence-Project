@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.IO;
+using TMPro;
 
 public class MainManager : MonoBehaviour
 {
+
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public GameObject playerName;
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -18,7 +22,8 @@ public class MainManager : MonoBehaviour
     
     private bool m_GameOver = false;
 
-    
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,7 +41,9 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
     }
+
 
     private void Update()
     {
@@ -70,6 +77,17 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
+        if (m_Points > MainManagerMenu.Instance.scorePlayer)
+        {
+            MainManagerMenu.Instance.scorePlayer = m_Points;
+            MainManagerMenu.Instance.bestPlayer = playerName.GetComponent<Text>().text;
+            MainManagerMenu.Instance.SaveDataPlayer();
+        }
+        else
+        {
+            MainManagerMenu.Instance.scorePlayerTable = m_Points;
+            MainManagerMenu.Instance.playerNameTable = playerName.GetComponent<Text>().text;
+        }
         m_GameOver = true;
         GameOverText.SetActive(true);
     }
